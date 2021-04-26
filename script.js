@@ -1,10 +1,10 @@
+// dice rolling logic
+
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
     e.preventDefault();
     roll();
     return false;
 });
-
-// let players = ["Player 1", "Player 2"];
 
 function roll() {
     let rand = () => Math.floor(Math.random() * 6) + 1;
@@ -34,10 +34,12 @@ function calcWinnerIndices(playerRolls){
 
 function displayWinner(winnerIndices){
     let text;
+    let playerNames =
+        Array.from(document.querySelectorAll(".player-name").values(), e => e.textContent)
     if(winnerIndices.length == 1){
-        text = `Player ${winnerIndices[0]} wins.`;
+        text = `${playerNames[winnerIndices[0]]} wins`;
     }else{
-        text = `It's a draw between ` + winnerIndices.map(ind => `Player ${ind}`).join(", ")
+        text = `It's a draw between ` + winnerIndices.map(ind => playerNames[ind]).join(", ")
     }
 
     document.querySelector(("#result #winners")).textContent = text;
@@ -52,37 +54,69 @@ function putFlags(winnerIndices){
 
 // name editing
 
-document.querySelectorAll(".player-name").forEach(elem => elem.addEventListener("click", (event) => {
-    let form = elem.parentNode.querySelector("form");
-    let textInput = form.querySelector("input[type='text'");
-    textInput.value = elem.textContent;
-    toggleEdit(elem.parentElement);
+function nameClicked(event){
+    let form = event.target.parentNode.querySelector("form");
+    let textInput = form.querySelector("input[type='text']");
+    textInput.value = event.target.textContent;
+    toggleEdit(event.target.parentElement);
     textInput.focus();
-}));
+}
 
-let forms = document.querySelectorAll("form");
-forms.forEach(form => form.addEventListener("submit", () => {
+function nameEditFormSubmit(event){
+    let form = event.target;
     let nameElem = form.closest(".player").querySelector(".player-name");
     nameElem.innerHTML = form.firstElementChild.value;
     toggleEdit(form.parentElement);
-}));
+}
 
-document.querySelectorAll("input[type='text']").forEach(textIntput => textIntput.addEventListener("blur", () => {
-    if (! textIntput.parentElement.classList.contains("hidden"))
-        toggleEdit(textIntput.parentElement.parentElement);
-    //event.target ?????????
-}));
+function nameEditInputBoxBlur(event){
+    let inputBox = event.target;
+    if (! inputBox.parentElement.classList.contains("hidden"))
+        toggleEdit(inputBox.parentElement.parentElement);
+}
 
-document.querySelectorAll("input[type='text']").forEach(textIntput => textIntput.addEventListener("keydown", (event) => {
+function nameEditInputBoxKeydown(event){
+    let inputBox = event.target;
     var x = event.keyCode;
     if (x == 27) {
-        toggleEdit(textIntput.parentElement.parentElement);
+        toggleEdit(inputBox.parentElement.parentElement);
     }
-}));
+}
+
+function addEditingEventListeners(){
+    document.querySelectorAll(".player-name").forEach(elem => elem.addEventListener("click", nameClicked));
+
+    let forms = document.querySelectorAll(".player form");
+    forms.forEach(form => form.addEventListener("submit", nameEditFormSubmit));
+
+    document.querySelectorAll(".player input[type='text']")
+        .forEach(textIntput => textIntput.addEventListener("blur", nameEditInputBoxBlur));
+
+    document.querySelectorAll(".player input[type='text']")
+        .forEach(textIntput => textIntput.addEventListener("keydown", nameEditInputBoxKeydown));
+}
+
+addEditingEventListeners();
+
+
 
 function toggleEdit(playerH2){
-    playerH2.children[0].classList.toggle("hidden");
-    playerH2.children[1].classList.toggle("hidden");
+    playerH2.querySelector("form").classList.toggle("hidden");
+    playerH2.querySelector(".player-name").classList.toggle("hidden");
 }
 
 // adding new player
+
+document.querySelector(".add-player").addEventListener("click",addPlayer);
+
+function addPlayer(){
+    let newPlayerElement = document.querySelector(".player").cloneNode(true);
+    newPlayerElement.querySelector(".player-name").innerHTML =
+        "Player " + (document.querySelectorAll(".player-name").length + 1);
+    document.querySelector("#dice").appendChild(newPlayerElement);
+    addEditingEventListeners();
+}
+
+function deletePlayer(playerDiv){
+    playerDiv.parentElement.removeChild(playerDiv);
+}

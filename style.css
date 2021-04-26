@@ -4,6 +4,7 @@ body{
     text-align: center;
     font-family: 'Freckle Face', cursive;
     vertical-align:middle;
+    box-sizing: border-box;
 }
 
 #title{
@@ -45,9 +46,34 @@ h2{
     border-radius: 3px; */
 }
 
+.player-name{
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 10px;
+    min-height: 1rem;
+    border: 1px solid transparent;
+}
+
 .player-name:hover{
     border: 1px solid white;
-    border-radius: 3px;;
+    border-style: solid;
+    border-radius: 3px;
+}
+
+.player h2{
+    position: relative;
+}
+
+.pencil-icon{
+    position: absolute;
+    bottom: 1rem;
+    display: none;
+    /* visibility: hidden; */
+}
+
+.player-name:hover ~ .pencil-icon{
+    display: unset;
+    /* visibility: visible; */
 }
 
 .form-inline {
@@ -62,6 +88,24 @@ h2{
 
 .form-inline input[type=text]{
     width: 80px;
+}
+
+.add-player, .add-player:active{
+    border: 1px solid white;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 20px auto;
+    width: 200px;
+}
+
+.add-player:hover{
+    box-shadow: 1px 1px 2px black;
+    text-shadow: 1px 1px 2px black;
+}
+
+.add-player:active{
+    box-shadow: none;
+    text-shadow: none;
 }
 
 #result{
