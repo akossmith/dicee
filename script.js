@@ -1,4 +1,8 @@
-// dice rolling logic
+addPlayer();
+addPlayer();
+addEditingEventListeners();
+
+document.querySelector(".add-player").addEventListener("click", addPlayer);
 
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
     e.preventDefault();
@@ -6,10 +10,12 @@ document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
     return false;
 });
 
+// dice rolling logic
+
 function roll() {
     let rand = () => Math.floor(Math.random() * 6) + 1;
     let playerRolls = []
-    document.querySelectorAll(".player img").forEach(
+    document.querySelectorAll("#dice .player img").forEach(
         (elem, ind) => {
             let roll = rand()
             playerRolls.push(roll);
@@ -35,7 +41,7 @@ function calcWinnerIndices(playerRolls){
 function displayWinner(winnerIndices){
     let text;
     let playerNames =
-        Array.from(document.querySelectorAll(".player-name").values(), e => e.textContent)
+        Array.from(document.querySelectorAll("#dice .player-name").values(), e => e.textContent);
     if(winnerIndices.length == 1){
         text = `${playerNames[winnerIndices[0]]} wins`;
     }else{
@@ -63,6 +69,7 @@ function nameClicked(event){
 }
 
 function nameEditFormSubmit(event){
+    event.preventDefault();
     let form = event.target;
     let nameElem = form.closest(".player").querySelector(".player-name");
     nameElem.innerHTML = form.firstElementChild.value;
@@ -96,10 +103,6 @@ function addEditingEventListeners(){
         .forEach(textIntput => textIntput.addEventListener("keydown", nameEditInputBoxKeydown));
 }
 
-addEditingEventListeners();
-
-
-
 function toggleEdit(playerH2){
     playerH2.querySelector("form").classList.toggle("hidden");
     playerH2.querySelector(".player-name").classList.toggle("hidden");
@@ -107,12 +110,11 @@ function toggleEdit(playerH2){
 
 // adding new player
 
-document.querySelector(".add-player").addEventListener("click",addPlayer);
-
 function addPlayer(){
-    let newPlayerElement = document.querySelector(".player").cloneNode(true);
+    let newPlayerElement =
+        document.querySelector("#player-template").firstElementChild.cloneNode(true);
     newPlayerElement.querySelector(".player-name").innerHTML =
-        "Player " + (document.querySelectorAll(".player-name").length + 1);
+        "Player " + (document.querySelectorAll("#dice .player-name").length + 1);
     document.querySelector("#dice").appendChild(newPlayerElement);
     addEditingEventListeners();
 }

@@ -14,10 +14,20 @@
 <body>
     <div id="title">
         <a href="#" id="click-to-roll">Let's roll!</a>
-        <!-- <h1 onclick="roll(this)">Let's roll!</h1> -->
     </div>
 
     <div id="dice">
+        <!-- To be populated by js -->
+    </div>
+
+    <div class="add-player">+</div>
+
+    <div id="result">
+        <h2 id="winners"></h2>
+    </div>
+
+    <!-- Hidden template -->
+    <div id="player-template">
         <div class="player">
             <h2>
                 <span class="player-name">Player 1</span>
@@ -29,22 +39,8 @@
             </h2>
             <img src="img/dice6.svg" alt="" style="width: 100px;">
         </div>
-        <div class="player">
-            <h2>
-                <span class="player-name">Player 2</span>
-                <span class="pencil-icon">&#x270E;</span>
-                <form action="" class="form-inline hidden">
-                    <input type="text" id="" class="name-edit">
-                </form>
-                <span class="flag"></span>
-            </h2>
-            <img src="img/dice6.svg" alt="" style="width: 100px;">
-        </div>
     </div>
-    <div class="add-player">+</div>
-    <div id="result">
-        <h2 id="winners"></h2>
-    </div>
+
     <script src="script.js"></script>
 </body>
 

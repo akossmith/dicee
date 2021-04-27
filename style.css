@@ -68,12 +68,10 @@ h2{
     position: absolute;
     bottom: 1rem;
     display: none;
-    /* visibility: hidden; */
 }
 
 .player-name:hover ~ .pencil-icon{
     display: unset;
-    /* visibility: visible; */
 }
 
 .form-inline {
@@ -112,6 +110,6 @@ h2{
     margin-top: 40px;
 }
 
-/* .form-inline input[tpye=tsubmit]{
-    width: inherit;
-} */
+#player-template{
+    visibility: hidden;
+}
