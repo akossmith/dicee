@@ -50,8 +50,22 @@ h2{
     border-radius: 3px; */
 }
 
-.player img{
+.dice-image-container{
+    width: 150px;
+    height: 150px;
+    position: relative;
+}
+
+.align-helper {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.dice-image-container img{
+    display: inline-block;
     width: 100px;
+    vertical-align: middle;
 }
 
 .player-name{
@@ -68,7 +82,7 @@ h2{
     border-radius: 3px;
 }
 
-.player h2{
+.player .player-name-container{
     position: relative;
 }
 

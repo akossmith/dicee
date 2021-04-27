@@ -1,17 +1,13 @@
-addPlayer();
-addPlayer();
+addPlayer("Player 1");
+addPlayer("Player 2");
 
-addEditingEventListeners();
-
-document.querySelector(".add-player").addEventListener("click", addPlayer);
+// dice rolling logic
 
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
     e.preventDefault();
     roll();
     return false;
 });
-
-// dice rolling logic
 
 function roll() {
     let rand = () => Math.floor(Math.random() * 6) + 1;
@@ -61,6 +57,8 @@ function putFlags(winnerIndices){
 }
 
 // name editing
+
+addEditingEventListeners();
 
 function nameClicked(event){
     let target = event.target;
@@ -117,11 +115,16 @@ function toggleEditVisibility(playerH2){
 
 // adding new player
 
-function addPlayer(){
+document.querySelector(".add-player").addEventListener("click", addPlayerClicked);
+
+function addPlayerClicked(){
+    addPlayer();
+}
+
+function addPlayer(name = "New Player"){
     let newPlayerElement =
         document.querySelector("#player-template").firstElementChild.cloneNode(true);
-    newPlayerElement.querySelector(".player-name").innerHTML =
-        "New Player";
+    newPlayerElement.querySelector(".player-name").innerHTML = name;
     document.querySelector("#players").appendChild(newPlayerElement);
     addEditingEventListeners();
 }
