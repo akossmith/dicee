@@ -1,5 +1,9 @@
 body{
-    background-color: #004A00;
+    background-color: #0D5007;
+    background: linear-gradient(180deg, #0D5007, rgb(168, 168, 0));
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    height: 100%;
     color:white;
     text-align: center;
     font-family: 'Freckle Face', cursive;
@@ -44,6 +48,10 @@ h2{
     padding: 0 20px;
     /* border: 3px solid white;
     border-radius: 3px; */
+}
+
+.player img{
+    width: 100px;
 }
 
 .player-name{

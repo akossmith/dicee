@@ -16,11 +16,12 @@ document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
 function roll() {
     let rand = () => Math.floor(Math.random() * 6) + 1;
     let playerRolls = []
-    document.querySelectorAll("#dice .player img").forEach(
+    document.querySelectorAll("#players .player img").forEach(
         (elem, ind) => {
             let roll = rand()
             playerRolls.push(roll);
-            elem.setAttribute("src", `img/dice${roll}.svg`);
+            elem.setAttribute("src", `img/dice/${roll}.svg`);
+            elem.style.transform = `rotate(${(Math.random()-0.5)*50}deg)`
         }
     );
     let winnerIndices = calcWinnerIndices(playerRolls);
@@ -42,11 +43,12 @@ function calcWinnerIndices(playerRolls){
 function displayWinner(winnerIndices){
     let text;
     let playerNames =
-        Array.from(document.querySelectorAll("#dice .player-name").values(), e => e.textContent);
+        Array.from(document.querySelectorAll("#players .player-name").values(), e => e.textContent);
     if(winnerIndices.length == 1){
         text = `${playerNames[winnerIndices[0]]} wins`;
     }else{
-        text = `It's a draw between ` + winnerIndices.map(ind => playerNames[ind]).join(", ")
+        let winnerNames = winnerIndices.map(ind => playerNames[ind]);
+        text = `It's a draw between ${winnerNames.slice(0, -1).join(", ")} and ${winnerNames[winnerNames.length-1]}`;
     }
 
     document.querySelector(("#result #winners")).textContent = text;
@@ -57,7 +59,6 @@ function putFlags(winnerIndices){
     flagDivs.forEach(div => div.innerHTML = "");
     winnerIndices.forEach(ind => flagDivs[ind].innerHTML = "🚩");
 }
-
 
 // name editing
 
@@ -120,13 +121,13 @@ function addPlayer(){
     let newPlayerElement =
         document.querySelector("#player-template").firstElementChild.cloneNode(true);
     newPlayerElement.querySelector(".player-name").innerHTML =
-        "Player " + (document.querySelectorAll("#dice .player-name").length + 1);
-    document.querySelector("#dice").appendChild(newPlayerElement);
+        "New Player";
+    document.querySelector("#players").appendChild(newPlayerElement);
     addEditingEventListeners();
 }
 
 function deleteIconClicked(event){
-    if(document.querySelectorAll("#dice .player").length > 2){
+    if(document.querySelectorAll("#players .player").length > 2){
         let playerDiv = event.target.closest(".player");
         playerDiv.parentElement.removeChild(playerDiv);
     }
