@@ -1,5 +1,6 @@
 addPlayer();
 addPlayer();
+
 addEditingEventListeners();
 
 document.querySelector(".add-player").addEventListener("click", addPlayer);
@@ -61,10 +62,13 @@ function putFlags(winnerIndices){
 // name editing
 
 function nameClicked(event){
-    let form = event.target.parentNode.querySelector("form");
+    let target = event.target;
+    let playerDiv = target.closest(".player");
+    let form = playerDiv.querySelector("form");
     let textInput = form.querySelector("input[type='text']");
-    textInput.value = event.target.textContent;
-    toggleEdit(event.target.parentElement);
+    let playerNameDisp = playerDiv.querySelector(".player-name");
+    textInput.value = playerNameDisp.textContent;
+    toggleEditVisibility(playerNameDisp.parentElement);
     textInput.focus();
 }
 
@@ -73,25 +77,27 @@ function nameEditFormSubmit(event){
     let form = event.target;
     let nameElem = form.closest(".player").querySelector(".player-name");
     nameElem.innerHTML = form.firstElementChild.value;
-    toggleEdit(form.parentElement);
+    toggleEditVisibility(form.parentElement);
 }
 
 function nameEditInputBoxBlur(event){
     let inputBox = event.target;
     if (! inputBox.parentElement.classList.contains("hidden"))
-        toggleEdit(inputBox.parentElement.parentElement);
+        toggleEditVisibility(inputBox.parentElement.parentElement);
 }
 
 function nameEditInputBoxKeydown(event){
     let inputBox = event.target;
     var x = event.keyCode;
     if (x == 27) {
-        toggleEdit(inputBox.parentElement.parentElement);
+        toggleEditVisibility(inputBox.parentElement.parentElement);
     }
 }
 
 function addEditingEventListeners(){
     document.querySelectorAll(".player-name").forEach(elem => elem.addEventListener("click", nameClicked));
+    document.querySelectorAll(".pencil-icon").forEach(elem => elem.addEventListener("click", nameClicked));
+    document.querySelectorAll(".delete-icon").forEach(elem => elem.addEventListener("click", deleteIconClicked));
 
     let forms = document.querySelectorAll(".player form");
     forms.forEach(form => form.addEventListener("submit", nameEditFormSubmit));
@@ -103,7 +109,7 @@ function addEditingEventListeners(){
         .forEach(textIntput => textIntput.addEventListener("keydown", nameEditInputBoxKeydown));
 }
 
-function toggleEdit(playerH2){
+function toggleEditVisibility(playerH2){
     playerH2.querySelector("form").classList.toggle("hidden");
     playerH2.querySelector(".player-name").classList.toggle("hidden");
 }
@@ -119,6 +125,9 @@ function addPlayer(){
     addEditingEventListeners();
 }
 
-function deletePlayer(playerDiv){
-    playerDiv.parentElement.removeChild(playerDiv);
+function deleteIconClicked(event){
+    if(document.querySelectorAll("#dice .player").length > 2){
+        let playerDiv = event.target.closest(".player");
+        playerDiv.parentElement.removeChild(playerDiv);
+    }
 }
