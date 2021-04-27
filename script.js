@@ -1,3 +1,5 @@
+let wins = []
+
 addPlayer("Player 1");
 addPlayer("Player 2");
 
@@ -23,6 +25,8 @@ function roll() {
     let winnerIndices = calcWinnerIndices(playerRolls);
     displayWinner(winnerIndices);
     putFlags(winnerIndices);
+
+    updateStats(winnerIndices);
 }
 
 function calcWinnerIndices(playerRolls){
@@ -36,18 +40,28 @@ function calcWinnerIndices(playerRolls){
     return winnerIndices;
 }
 
+function calcPlayerNames(){
+    return Array.from(document.querySelectorAll("#players .player-name").values(), e => e.textContent);
+}
+
+function calcWinnerNames(winnerIndices){
+    let playerNames = calcPlayerNames();
+    let winnerNames = winnerIndices.map(ind => playerNames[ind]);
+    return winnerNames;
+}
+
 function displayWinner(winnerIndices){
     let text;
-    let playerNames =
-        Array.from(document.querySelectorAll("#players .player-name").values(), e => e.textContent);
-    if(winnerIndices.length == 1){
-        text = `${playerNames[winnerIndices[0]]} wins`;
+    let winnerNames = calcWinnerNames(winnerIndices);
+    if(winnerNames.length == 1){
+        text = `<em>${winnerNames[0]}</em> wins this round`;
     }else{
-        let winnerNames = winnerIndices.map(ind => playerNames[ind]);
-        text = `It's a draw between ${winnerNames.slice(0, -1).join(", ")} and ${winnerNames[winnerNames.length-1]}`;
+        text = `This round is a draw between
+            ${winnerNames.slice(0, -1).map(s => '<em>'+s+'</em>').join(", ")}
+            and <em>${winnerNames[winnerNames.length-1]}<em>`;
     }
 
-    document.querySelector(("#result #winners")).textContent = text;
+    document.querySelector(("#result #winners")).innerHTML = text;
 }
 
 function putFlags(winnerIndices){
@@ -127,11 +141,37 @@ function addPlayer(name = "New Player"){
     newPlayerElement.querySelector(".player-name").innerHTML = name;
     document.querySelector("#players").appendChild(newPlayerElement);
     addEditingEventListeners();
+
+    wins.push(0);
 }
 
 function deleteIconClicked(event){
-    if(document.querySelectorAll("#players .player").length > 2){
+    let numPlayers = document.querySelectorAll("#players .player").length;
+    if(numPlayers > 2){
         let playerDiv = event.target.closest(".player");
         playerDiv.parentElement.removeChild(playerDiv);
+
+        let currPlayerInd = Array.from(document.querySelectorAll("#players .player")).indexOf(playerDiv);
+        wins.splice(currPlayerInd,1);
     }
+}
+
+// stats
+
+function updateStats(winnerIndices){
+    winnerIndices.forEach(i => wins[i]++);
+
+    let statsDiv = document.querySelector("#stats");
+
+    let playerNames = calcPlayerNames();
+
+    function flags(num){
+        let a = new Array(num);
+        a.fill('🚩',0,num);
+        return a.join("");
+    }
+
+    let html = playerNames.map((name, ind) => `${name} ` + flags(wins[ind]) + " " + wins[ind]).join("<br>");
+
+    statsDiv.innerHTML = html;
 }
