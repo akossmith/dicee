@@ -24,7 +24,7 @@ function roll() {
     );
     let winnerIndices = calcWinnerIndices(playerRolls);
     displayWinner(winnerIndices);
-    putFlags(winnerIndices);
+    putWinnerMarkers(winnerIndices);
 
     updateStats(winnerIndices);
 }
@@ -64,10 +64,10 @@ function displayWinner(winnerIndices){
     document.querySelector(("#result #winners")).innerHTML = text;
 }
 
-function putFlags(winnerIndices){
+function putWinnerMarkers(winnerIndices){
     let flagDivs = document.querySelectorAll(".flag");
     flagDivs.forEach(div => div.innerHTML = "");
-    winnerIndices.forEach(ind => flagDivs[ind].innerHTML = "🚩");
+    winnerIndices.forEach(ind => flagDivs[ind].innerHTML = "&#11044;");
 }
 
 // name editing
@@ -127,7 +127,7 @@ function toggleEditVisibility(playerH2){
     playerH2.querySelector(".player-name").classList.toggle("hidden");
 }
 
-// adding new player
+// adding/deleting player
 
 document.querySelector(".add-player").addEventListener("click", addPlayerClicked);
 
@@ -167,11 +167,13 @@ function updateStats(winnerIndices){
 
     function flags(num){
         let a = new Array(num);
-        a.fill('🚩',0,num);
+        a.fill('<span class="flag">&#11044;</span>',0,num);
         return a.join("");
     }
 
-    let html = playerNames.map((name, ind) => `${name} ` + flags(wins[ind]) + " " + wins[ind]).join("<br>");
+    let html = "<table>"
+    html += playerNames.map((name, ind) => `<tr><td>${name} ` + '</td><td>' + flags(wins[ind]) + wins[ind] + "</td></tr>").join("");
+    html += "</table>"
 
     statsDiv.innerHTML = html;
 }

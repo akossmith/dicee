@@ -7,43 +7,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Freckle+Face&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rokkitt:wght@400;500;700&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 
 <body>
     <section id="title">
-        <a href="#" id="click-to-roll">Let's roll!</a>
+        <a href="#" id="click-to-roll" class="shadow-on-hover">Let's roll!<img src="img/dice/6.svg"></a>
     </section>
 
     <section id="players">
         <!-- To be populated by js -->
     </section>
 
-    <div class="add-player">+</div>
+    <div class="add-player shadow-on-hover">+</div>
 
     <section id="result">
         <h2 id="winners"></h2>
     </section>
 
     <section id="stats-section">
-        <h1>Total wins</h1>
+        <h2>Total wins</h2>
         <div id="stats">
             No one has won yet. Anything can happen...
         </div>
     </section>
+
     <!-- Hidden template -->
     <div id="player-template">
         <div class="player">
             <div class="player-name-container">
                 <span class="player-name">Player 1</span>
                 <span class="actions">
-                    <span class="pencil-icon action-icon">&#x270E;</span>
+                    <span class="pencil-icon action-icon">&#x270E;</span><br>
                     <span class="delete-icon action-icon">&#215;</span>
                 </span>
 
                 <form action="" class="form-inline hidden">
-                    <input type="text" id="" class="name-edit">
+                    <input type="text" id="" class="name-edit" maxlength="12">
                 </form>
                 <span class="flag"></span>
             </div>
