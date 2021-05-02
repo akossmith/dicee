@@ -66,8 +66,8 @@ function displayWinner(winnerIndices){
 
 function putWinnerMarkers(winnerIndices){
     let flagDivs = document.querySelectorAll(".flag");
-    flagDivs.forEach(div => div.innerHTML = "");
-    winnerIndices.forEach(ind => flagDivs[ind].innerHTML = "&#11044;");
+    flagDivs.forEach(div => div.style.visibility = "hidden");
+    winnerIndices.forEach(ind => flagDivs[ind].style.visibility = "visible");
 }
 
 // name editing

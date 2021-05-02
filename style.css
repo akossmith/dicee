@@ -62,11 +62,8 @@ h2{
     display: inline-block;
     padding: 10px 20px 0px 20px;
     margin: 10px 10px;
-    /* background-color: rgba(13, 67, 101, 0.6); */
-
     background-image: url("img/player_background.jpg");
     background-size: 100% auto;
-
     height: 180px;
     border-radius: 10px;
     border: 1px solid var(--light-color);
@@ -83,8 +80,11 @@ h2{
 }
 
 .player .flag{
-    height: 1.5rem;
+    position: absolute;
     color: #BA3806;
+    visibility: hidden;
+    top: -3px;
+    right: -10px;
 }
 
 .player-name:hover{
@@ -130,7 +130,13 @@ h2{
 }
 
 .form-inline input[type=text]{
-    width: 80px;
+    width: 100px;
+    font-family: 'Rokkitt', serif;
+    background-color: rgba(13, 67, 101, 0.6);
+    border-style: 1px solid var(--light-color);
+    color: var(--light-color);
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 .add-player, .add-player:active{
@@ -179,14 +185,27 @@ h2{
 }
 
 #stats-section{
-    margin-top: 20px;
-    margin-left: 50px;
-    margin-right: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
     padding: 20px;
+}
+
+#stats-section h2{
+    font-size: 1.5rem;
 }
 
 #stats{
     text-align: left;
+}
+
+#stats table{
+    width: 100%;
+    table-layout: fixed;
+    word-break: break-all;
+}
+
+#stats td:first-child{
+    width: 8em;
 }
 
 #player-template{
