@@ -1,7 +1,15 @@
 let wins = []
+let cachedImages = []
 
-addPlayer("Player 1");
-addPlayer("Player 2");
+for(let i = 6; i >= 1; i--){
+    cachedImages[i] = new Image(100, 100);
+    cachedImages[i].src = `img/dice/${i}.svg`;
+}
+
+cachedImages[6].addEventListener("load", () => {
+    addPlayer("Player 1");
+    addPlayer("Player 2");
+});
 
 // dice rolling logic
 
@@ -14,13 +22,14 @@ document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
 function roll() {
     let rand = () => Math.floor(Math.random() * 6) + 1;
     let playerRolls = []
-    document.querySelectorAll("#players .player img").forEach(
+    document.querySelectorAll("#players .player canvas").forEach(
         (elem, ind) => {
             let roll = rand()
             playerRolls.push(roll);
-            elem.style.visibility = "hidden";
-            elem.setAttribute("src", `img/dice/${roll}.svg`);
-            elem.style.transform = `rotate(${(Math.random()-0.5)*50}deg)`
+
+            ctx = elem.getContext('2d');
+            ctx.drawImage(cachedImages[roll], 0, 0);
+            elem.style.transform = `rotate(${(Math.random()-0.5)*50}deg)`;
         }
     );
     let winnerIndices = calcWinnerIndices(playerRolls);
@@ -109,9 +118,6 @@ function nameEditInputBoxKeydown(event){
 }
 
 function addEditingEventListeners(){
-    document.querySelectorAll("#players .player img").forEach(elem => 
-        elem.addEventListener("load",() => elem.style.visibility = "visible"));
-
     document.querySelectorAll(".player-name").forEach(elem => elem.addEventListener("click", nameClicked));
     document.querySelectorAll(".pencil-icon").forEach(elem => elem.addEventListener("click", nameClicked));
     document.querySelectorAll(".delete-icon").forEach(elem => elem.addEventListener("click", deleteIconClicked));
@@ -144,6 +150,10 @@ function addPlayer(name = "New Player"){
         document.querySelector("#player-template").firstElementChild.cloneNode(true);
     newPlayerElement.querySelector(".player-name").innerHTML = name;
     document.querySelector("#players").appendChild(newPlayerElement);
+
+    ctx = newPlayerElement.querySelector(".dice-image-container canvas").getContext('2d');
+    ctx.drawImage(cachedImages[6], 0, 0);
+
     addEditingEventListeners();
 
     wins.push(0);

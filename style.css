@@ -169,7 +169,7 @@ h2{
     vertical-align: middle;
 }
 
-.dice-image-container img{
+.dice-image-container canvas{
     opacity: 0.93;
     display: inline-block;
     height: 100px;
