@@ -172,6 +172,7 @@ h2{
 .dice-image-container img{
     opacity: 0.93;
     display: inline-block;
+    height: 100px;
     width: 100px;
     vertical-align: middle;
 }

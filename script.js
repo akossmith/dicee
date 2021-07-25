@@ -18,6 +18,7 @@ function roll() {
         (elem, ind) => {
             let roll = rand()
             playerRolls.push(roll);
+            elem.style.visibility = "hidden";
             elem.setAttribute("src", `img/dice/${roll}.svg`);
             elem.style.transform = `rotate(${(Math.random()-0.5)*50}deg)`
         }
@@ -108,6 +109,9 @@ function nameEditInputBoxKeydown(event){
 }
 
 function addEditingEventListeners(){
+    document.querySelectorAll("#players .player img").forEach(elem => 
+        elem.addEventListener("load",() => elem.style.visibility = "visible"));
+
     document.querySelectorAll(".player-name").forEach(elem => elem.addEventListener("click", nameClicked));
     document.querySelectorAll(".pencil-icon").forEach(elem => elem.addEventListener("click", nameClicked));
     document.querySelectorAll(".delete-icon").forEach(elem => elem.addEventListener("click", deleteIconClicked));
