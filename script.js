@@ -1,3 +1,5 @@
+'use strict';
+
 class Player{
     name;
     wins = 0;
@@ -64,25 +66,30 @@ class Game {
     }
 }
 class HtmlHandler {
-    static rotations = []
+    game;
+    rotations = [];
 
-    static roll(){
-        game.roll();
-        game.players.forEach((_, idx) => this.rotations[idx] = (Math.random()-0.5)*50);
-
-        HtmlHandler.render();
+    constructor(game) {
+        this.game = game;
     }
 
-    static render() {
+    roll(){
+        this.game.roll();
+        this.game.players.forEach((_, idx) => this.rotations[idx] = (Math.random()-0.5)*50);
+
+        this.render();
+    }
+
+    render() {
         document.querySelectorAll("#players .player").forEach(playerDiv => playerDiv.remove());
 
-        game.players.forEach((player,idx) => {
+        this.game.players.forEach((player,idx) => {
             let newPlayerElement = player.htmlElem();
             newPlayerElement.querySelector("input[name='playerIdx']").value = idx;
 
             let canvas = newPlayerElement.querySelector("canvas");
             let ctx = canvas.getContext('2d');
-            ctx.drawImage(cachedImages[game.players[idx].currentRoll], 0, 0);
+            ctx.drawImage(cachedImages[this.game.players[idx].currentRoll], 0, 0, 100, 100);
             canvas.style.transform = `rotate(${this.rotations[idx]}deg)`;
 
             document.querySelector("#players").appendChild(newPlayerElement);
@@ -106,20 +113,20 @@ class HtmlHandler {
         this._renderStats();
     }
     
-    static addPlayer = () => {
-        game.addPlayer();
+    addPlayer = () => {
+        this.game.addPlayer();
         this.render();
     }
 
-    static _renderWinnerMarkers(){
+    _renderWinnerMarkers(){
         let flagDivs = document.querySelectorAll(".flag");
         flagDivs.forEach(div => div.style.visibility = "hidden");
-        game.currWinnerIndices.forEach(ind => flagDivs[ind].style.visibility = "visible");
+        this.game.currWinnerIndices.forEach(ind => flagDivs[ind].style.visibility = "visible");
     }
 
-    static _displayWinners(){
+    _displayWinners(){
         let text;
-        let winnerNames = game.currWinnerIndices.map(ind => game.playerNames[ind]);
+        let winnerNames = this.game.currWinnerIndices.map(ind => this.game.playerNames[ind]);
         if(winnerNames.length == 1){
             text = `<em>${winnerNames[0]}</em> wins this round`;
         }else{
@@ -131,10 +138,10 @@ class HtmlHandler {
         document.querySelector(("#result #winners")).innerHTML = text;
     }
 
-    static _renderStats(){
+    _renderStats(){
         let statsDiv = document.querySelector("#stats");
     
-        let playerNames = game.playerNames;
+        let playerNames = this.game.playerNames;
     
         function flags(num){
             let a = new Array(num);
@@ -144,19 +151,19 @@ class HtmlHandler {
     
         let html = "<table>"
         html += playerNames.map((name, ind) => `<tr><td>${name} ` +
-             '</td><td>' + flags(game.players[ind].wins) + game.players[ind].wins + "</td></tr>").join("");
+             '</td><td>' + flags(this.game.players[ind].wins) + this.game.players[ind].wins + "</td></tr>").join("");
         html += "</table>"
     
         statsDiv.innerHTML = html;
     }
 
-    static getPlayerIdx(htmlElem){
+    getPlayerIdx(htmlElem){
         return Number(htmlElem.closest(".player").querySelector("input[name='playerIdx']").value);
     }
 
     // ----------- name editing --------------
 
-    static nameClicked = (event) => {
+    nameClicked = (event) => {
         let target = event.target;
         let playerDiv = target.closest(".player");
         let form = playerDiv.querySelector("form");
@@ -167,29 +174,29 @@ class HtmlHandler {
         textInput.focus();
     }
 
-    static deleteIconClicked = (event) => {
-        let numPlayers = game.players.length;
+    deleteIconClicked = (event) => {
+        let numPlayers = this.game.players.length;
         if(numPlayers > 2){
-            game.removePlayer( this.getPlayerIdx(event.target));
+            this.game.removePlayer( this.getPlayerIdx(event.target));
             this.render();
         }
     }
 
-    static nameEditFormSubmit = (event) => {
+    nameEditFormSubmit = (event) => {
         event.preventDefault();
         let form = event.target;
-        game.players[this.getPlayerIdx(form)].name = form.firstElementChild.value;
+        this.game.players[this.getPlayerIdx(form)].name = form.firstElementChild.value;
 
         this.render();
     }
 
-    static nameEditInputBoxBlur = (event) => {
+    nameEditInputBoxBlur = (event) => {
         let inputBox = event.target;
         if (! inputBox.parentElement.classList.contains("hidden"))
             this.toggleEditVisibility(inputBox.parentElement.parentElement);
     }
 
-    static nameEditInputBoxKeydown = (event) => {
+    nameEditInputBoxKeydown = (event) => {
         let inputBox = event.target;
         var x = event.keyCode;
         if (x == 27) {
@@ -197,33 +204,34 @@ class HtmlHandler {
         }
     }
 
-    static toggleEditVisibility(playerH2){
+    toggleEditVisibility(playerH2){
         playerH2.querySelector("form").classList.toggle("hidden");
         playerH2.querySelector(".player-name").classList.toggle("hidden");
     }
 }
 
 let game = new Game();
+let htmlHandler = new HtmlHandler(game);
 
 let cachedImages = [];
 for(let i = 6; i >= 1; i--){
     cachedImages[i] = new Image(100, 100);
     cachedImages[i].src = `img/dice/${i}.svg`;
 }
-
 cachedImages[6].addEventListener("load", () => {
+ 
     game.addPlayer("Player 1");
     game.addPlayer("Player 2");
-    HtmlHandler.render();
+    htmlHandler.render();
 });
 
 
 // dice roll click
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
     e.preventDefault();
-    HtmlHandler.roll();
+    htmlHandler.roll();
     return false;
 });
 
 // add player click
-document.querySelector(".add-player").addEventListener("click", HtmlHandler.addPlayer);
+document.querySelector(".add-player").addEventListener("click", () => htmlHandler.addPlayer());
