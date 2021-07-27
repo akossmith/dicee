@@ -1,12 +1,10 @@
 'use strict';
 
 class Player{
-    name;
-    wins = 0;
-    currentRoll = 6;
-
     constructor(name) {
         this.name = name;
+        this.wins = 0;
+        this.currentRoll = 6;
     }
 
     htmlElem() {
@@ -18,7 +16,6 @@ class Player{
 }
 
 class Game {
-    players = [];
 
     get currWinnerIndices(){
         return Game._calcWinnerIndices(this.players.map(pl => pl.currentRoll));
@@ -31,6 +28,7 @@ class Game {
     constructor(color, number) {
         this.color = color;
         this.number = number;
+        this.players = [];
     }
 
     roll(){
@@ -66,11 +64,12 @@ class Game {
     }
 }
 class HtmlHandler {
-    game;
-    rotations = [];
-
+    
     constructor(game) {
         this.game = game;
+        this.rotations = [];
+        this.cachedImages = [];
+        this._loadImages();
     }
 
     roll(){
@@ -89,7 +88,7 @@ class HtmlHandler {
 
             let canvas = newPlayerElement.querySelector("canvas");
             let ctx = canvas.getContext('2d');
-            ctx.drawImage(cachedImages[this.game.players[idx].currentRoll], 0, 0, 100, 100);
+            ctx.drawImage(this.cachedImages[this.game.players[idx].currentRoll], 0, 0, 100, 100);
             canvas.style.transform = `rotate(${this.rotations[idx]}deg)`;
 
             document.querySelector("#players").appendChild(newPlayerElement);
@@ -199,7 +198,8 @@ class HtmlHandler {
     nameEditInputBoxKeydown = (event) => {
         let inputBox = event.target;
         var x = event.keyCode;
-        if (x == 27) {
+        const ESCAPE_KEYCODE = 27;
+        if (x == ESCAPE_KEYCODE) {
             this.toggleEditVisibility(inputBox.parentElement.parentElement);
         }
     }
@@ -208,24 +208,25 @@ class HtmlHandler {
         playerH2.querySelector("form").classList.toggle("hidden");
         playerH2.querySelector(".player-name").classList.toggle("hidden");
     }
+
+    _loadImages() {
+        for (let i = 6; i >= 1; i--) {
+            this.cachedImages[i] = new Image(100, 100);
+            this.cachedImages[i].src = `img/dice/${i}.svg`;
+        }
+        this.cachedImages[6].addEventListener("load", () => {
+            game.addPlayer("Player 1");
+            game.addPlayer("Player 2");
+            htmlHandler.render();
+        });
+        this.cachedImages[1].addEventListener("load", () => {
+            htmlHandler.render();
+        });
+    }
 }
 
 let game = new Game();
 let htmlHandler = new HtmlHandler(game);
-
-let cachedImages = [];
-for(let i = 6; i >= 1; i--){
-    cachedImages[i] = new Image(100, 100);
-    cachedImages[i].src = `img/dice/${i}.svg`;
-}
-cachedImages[6].addEventListener("load", () => {
-    game.addPlayer("Player 1");
-    game.addPlayer("Player 2");
-    htmlHandler.render();
-});
-cachedImages[1].addEventListener("load", () => {
-    htmlHandler.render();
-});
 
 // dice roll click
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
