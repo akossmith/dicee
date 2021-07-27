@@ -219,12 +219,13 @@ for(let i = 6; i >= 1; i--){
     cachedImages[i].src = `img/dice/${i}.svg`;
 }
 cachedImages[6].addEventListener("load", () => {
- 
     game.addPlayer("Player 1");
     game.addPlayer("Player 2");
     htmlHandler.render();
 });
-
+cachedImages[1].addEventListener("load", () => {
+    htmlHandler.render();
+});
 
 // dice roll click
 document.querySelector("a#click-to-roll").addEventListener("click",(e) => {
